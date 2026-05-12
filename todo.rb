@@ -9,17 +9,25 @@ end
 
 tasks = File.exist?(path) ? load_tasks(path) : []
 
+def save_tasks(path, tasks)
+    File.write(path, tasks.map { |t| "#{t[:id]}\t#{t[:title]}\t#{t[:done]}" }.join("\n"))
+end
+
+def delete_task(path, id)
+    tasks = load_tasks(path)
+    tasks.delete_if { |t| t[:id] == id }
+    save_tasks(path, tasks)
+    puts "削除しました: #{id}"
+end
+
 case ARGV[0]
-when "add"
-    id = tasks.empty? ? 1 : tasks.map { |task| task[:id] }.max + 1
-    tasks << { id: id, title: ARGV[1], done: false}
-    File.write(path, tasks.map { |t| "#{t[:id]}\t#{t[:title]}\t#{t[:done]}"}.join("\n"))
-    puts "追加しました: #{ARGV[1]}"
+when "delete"
+    delete_task(path, ARGV[1].to_i)
 when "list"
-    tasks.each do |t|
+    load_tasks(path).each do |t|
         fin = t[:done] ? "[x]" : "[ ]"
         puts "[#{t[:id]}] #{fin} #{t[:title]}"
     end
 end
 
-
+    
