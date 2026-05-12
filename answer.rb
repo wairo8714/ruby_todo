@@ -29,18 +29,13 @@ when "add"
   puts "追加しました: #{title}"
 when "list"
   tasks.each do |t|
-    fin = t[:done] ? "[x]" : "[ ]"
-    puts "[#{t[:id]}] #{fin} #{t[:title]}"
+    mark = t[:done] ? "[x]" : "[ ]"
+    puts "[#{t[:id]}] #{mark} #{t[:title]}"
   end
 when "delete"
   id = ARGV[1].to_i
-  target = tasks.find { |t| t[:id] == id }
-  tasks.delete_if { |t| t[:id] == id }
+  tasks.reject! { |t| t[:id] == id }
   save_tasks(PATH, tasks)
-  if target
-    puts "削除しました: #{target[:title]}"
-  else
-    puts "IDがみつかりません"
-  end
+else
+  warn "使い方: ruby todo.rb add \"...\" | list | delete ID"
 end
-
