@@ -84,13 +84,25 @@ class TodoList
   end
 end
 
-list = TodoList.new(PATH)
+# 下記case分岐だけでも対応可能だが、先にif分岐を設けることで無駄なファイル読み込みを減らせるらしい 
+if ARGV.empty?
+  puts "使い方: ruby todo.rb {add|list|done|delete} ..."
+  exit 1
+end
 
-case ARGV[0]
-when "list"   then list.list
-when "add"    then list.add(ARGV[1])
-when "done"   then list.done(ARGV[1].to_i)
-when "delete" then list.delete(ARGV[1].to_i)
-else
-  puts "使い方: ruby todo.rb {add|list|done|delete}..."
+begin
+  todo = TodoList.new(PATH)
+
+  case ARGV[0]
+  when "list"   then todo.list
+  when "add"    then todo.add(ARGV[1])
+  when "done"   then todo.done(ARGV[1].to_i)
+  when "delete" then todo.delete(ARGV[1].to_i)
+  else
+    puts "使い方: ruby todo.rb {add|list|done|delete} ..."
+    exit 1
+  end
+rescue TaskNotFound => e
+  warn "タスクが見つかりません: #{e.message}"
+  exit 1
 end
