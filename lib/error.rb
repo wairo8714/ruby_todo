@@ -1,0 +1,2 @@
+class TaskNotFound < StandardError
+end
