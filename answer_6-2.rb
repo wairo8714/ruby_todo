@@ -83,4 +83,6 @@ when "list"   then list.list
 when "add"    then list.add(ARGV[1])
 when "done"   then list.done(ARGV[1].to_i)
 when "delete" then list.delete(ARGV[1].to_i)
+else
+  warn "使い方: ruby todo.rb list | add \"...\" | done ID | delete ID"
 end
