@@ -32,6 +32,19 @@ class TodoListInterface
     task
   end
 
+  def find(id:)
+    todo_list = TaskRepository.get
+    task = todo_list.find(id)
+    task
+  end
+
+  def edit(id:, title:)
+    todo_list = TaskRepository.get
+    task = todo_list.edit(id, title)
+    TaskRepository.save(todo_list)
+    task
+  end
+
   private
 
   def format(task)
