@@ -11,15 +11,14 @@ class TaskRepository
     raw = File.read(PATH).strip
     return TodoList.new if raw.empty?
 
-    loaded_tasks =
-      begin
-        JSON.parse(raw).map do |h|
-          Task.new(id: h["id"], title: h["title"], done: h["done"])
-        end
-      rescue JSON::ParserError
-        warn "tasks.json の形式が正しくありません。空のリストで続行します。"
-        []
+    loaded_tasks = begin
+      JSON.parse(raw).map do |h|
+        Task.new(id: h["id"], title: h["title"], done: h["done"])
       end
+    rescue JSON::ParserError
+      warn "tasks.json の形式が正しくありません。空のリストで続行します。"
+      []
+    end
 
     TodoList.new(tasks: loaded_tasks)
   end
