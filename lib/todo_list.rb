@@ -1,5 +1,7 @@
 require_relative "task"
-require_relative "error"
+
+class TaskNotFound < StandardError
+end
 
 class TodoList
   attr_reader :tasks

@@ -1,4 +1,5 @@
-require_relative "error"
+class EmptyTitleError < StandardError
+end
 
 class Task
   attr_reader :id, :title
