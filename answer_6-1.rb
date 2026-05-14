@@ -4,7 +4,7 @@ PATH = "tasks.json"
 
 class Task  #クラスに記述するのは、「ひとつのタスクが行う挙動」である
 
-  # attr_accesorをつかえばインスタンス変数がタスクの外から参照、書き込みできるようになる
+  # attr_accesorをつかえばクラスの外からメソッドとして読み書きが可能になる
   attr_accessor :id, :title, :done
 
   # initializeメソッドを使うことで、まだオブジェクトが作られていない段階でインスタンスの初期化ができる
