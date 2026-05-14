@@ -1,24 +1,34 @@
 require "json"
 require_relative "task"
+require_relative "todo_list"
 
 class TaskRepository
   PATH = File.expand_path("../tasks.json", __dir__)
 
   def self.get
-    return [] unless File.exist?(PATH)
+    return TodoList.new unless File.exist?(PATH)
 
     raw = File.read(PATH).strip
-    return [] if raw.empty?
+    return TodoList.new if raw.empty?
 
-    begin
-      JSON.parse(raw).map { |h| Task.from_h(h.transform_keys(&:to_sym)) }
-    rescue JSON::ParserError
-      warn "tasks.json の形式が正しくありません。空のリストで続行します。"
-      []
-    end
+    loaded_tasks =
+      begin
+        JSON.parse(raw).map do |h|
+          Task.new(id: h["id"], title: h["title"], done: h["done"])
+        end
+      rescue JSON::ParserError
+        warn "tasks.json の形式が正しくありません。空のリストで続行します。"
+        []
+      end
+
+    TodoList.new(tasks: loaded_tasks)
   end
 
-  def self.save(tasks)
-    File.write(PATH, JSON.generate(tasks.map(&:to_h)))
+  def self.save(todo_list)
+    array = []
+    todo_list.tasks.each do |task|
+      array << { id: task.id, title: task.title, done: task.done? }
+    end
+    File.write(PATH, JSON.generate(array))
   end
 end

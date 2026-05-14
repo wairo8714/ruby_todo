@@ -1,43 +1,38 @@
-
 require_relative "task"
-require_relative "task_repository"
 require_relative "error"
 
 class TodoList
+  attr_reader :tasks
 
-  def add(title)
-    tasks = TaskRepository.get
-    tasks << Task.new(id: next_id(tasks), title: title, done: false)
-    TaskRepository.save(tasks)
-    puts "追加しました: #{title}"
+  def initialize(tasks: [])
+    @tasks = tasks
   end
 
-  def list
-    TaskRepository.get.each { |task| puts task.format }
+  def add(task)
+    @tasks << task
   end
 
   def done(id)
-    tasks = TaskRepository.get
-    task = tasks.find { |t| t.id == id }
+    task = find_by_id(id)
     raise TaskNotFound, "id=#{id}" unless task
-    task.done = true
-    TaskRepository.save(tasks)
-    puts "完了しました: #{task.title}"
+    task.done
+    task
   end
 
   def delete(id)
-    tasks = TaskRepository.get
-    task = tasks.find { |t| t.id == id }
+    task = find_by_id(id)
     raise TaskNotFound, "id=#{id}" unless task
+    @tasks.delete(task)
+    task
+  end
 
-    tasks.delete(task)
-    TaskRepository.save(tasks)
-    puts "削除しました: #{task.title}"
+  def next_id
+    @tasks.empty? ? 1 : @tasks.map(&:id).max + 1
   end
 
   private
 
-  def next_id(tasks)
-    tasks.empty? ? 1 : tasks.map(&:id).max + 1
+  def find_by_id(id)
+    @tasks.find { |t| t.id == id }
   end
 end

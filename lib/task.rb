@@ -1,5 +1,5 @@
 class Task
-  attr_accessor :id, :title, :done
+  attr_reader :id, :title
 
   def initialize(id:, title:, done: false)
     @id = id
@@ -7,16 +7,11 @@ class Task
     @done = done
   end
 
-  def to_h
-    { id: @id, title: @title, done: @done }
+  def done
+    @done = true
   end
 
-  def self.from_h(hash)
-    new(id: hash[:id], title: hash[:title], done: hash[:done])
-  end
-
-  def format
-    mark = @done ? "[x]" : "[ ]"
-    "[#{@id}] #{mark} #{@title}"
+  def done?
+    @done
   end
 end
